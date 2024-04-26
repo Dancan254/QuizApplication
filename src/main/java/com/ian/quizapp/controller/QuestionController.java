@@ -3,6 +3,12 @@ package com.ian.quizapp.controller;
 import com.ian.quizapp.dto.QuestionDto;
 import com.ian.quizapp.model.Question;
 import com.ian.quizapp.services.QuestionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +21,18 @@ import java.util.List;
 public class QuestionController {
     @Autowired
     QuestionService questionService;
+    @Operation(summary = "get all questions")
+    @ApiResponses(
+            value  = {
+                    @ApiResponse(responseCode = "200", description = "questions fetched successfully",
+                            content = {
+                                    @Content(mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = QuestionDto.class)))
+                            }
+                    )
+
+            }
+    )
     @GetMapping("/allQuestions")
     public ResponseEntity<List<QuestionDto>> getAllQuestions(){
         return new ResponseEntity<>(questionService.getAllQuestions(), HttpStatus.OK);
